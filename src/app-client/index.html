@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8;">
+	<!-- Meta, title, CSS, favicons, etc. -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Open Monitor System</title>
+
+	<style>@import "applib/css/themes/flat/flat.css"; @import "applib/css/themes/flat/flat.css";@import "applib/css/app.css";</style>
+	<link href="applib/css/themes/flat/dgrid/flat.css" rel="stylesheet">
+
+	<script type="text/javascript" src="applib/js/dojo/dojo/dojo/dojo.js" 
+	data-dojo-config="'parseOnLoad':true,'async':true, 'packages':[
+	{'name':'widgets','location':'../custom'}
+	,{'name':'Widget','location':'../../custom'}
+	]"></script> 
+
+	<!-- REQUIRE DOJO -->
+	<script>require([
+		"dojo",    
+		"dijit/dijit",
+		"dojo/parser",
+		"dijit/Dialog",
+		"dijit/form/Button",
+		"dojo/request"
+		]);
+	</script>
+
+	<script type="text/javascript">
+
+		require(["dojo/ready", "dojo/request"], function(ready, request){
+			ready(function(){
+
+
+				dijit.byId('ok').on('Click', function(e){
+
+					console.debug(e);
+					request.post("/login", {
+						handleAs: "json",
+						data: {user: dijit.byId('user').get('value'), pwd: dijit.byId('pwd').get('value')}
+					}).then(function(res){
+						if(res.success){
+							window.location = '/oms.html'
+						}else{
+							location.reload(true);
+						}
+					}, function(res){
+						location.reload(true);
+					})
+
+				});
+
+				dijit.byId('actionBarDialog').show();
+
+			});
+		});
+
+	</script>
+
+
+</head>
+
+<body  class="flat" id="myapp">
+
+	<div data-dojo-type="dijit/Dialog" id="actionBarDialog" title="Login" style="width: auto; display: none;">
+
+		<div class="dijitDialogPaneContentArea" style="text-align: center; max-width: 350px;">
+
+			<fieldset>
+				<legend>Usuario</legend>
+
+				<input data-dojo-type="dijit/form/ValidationTextBox" id="user" placeholder="usuario" required name="user" type="text"></input>
+
+			</fieldset>  
+
+
+			<fieldset>
+				<legend>Password</legend>
+
+				<input data-dojo-type="dijit/form/ValidationTextBox" required name="pwd" id="pwd" type="password"></input>
+
+			</fieldset>  
+
+		</div>
+		<div class="dijitDialogPaneActionBar">
+			<button data-dojo-type="dijit/form/Button" type="submit" id="ok" data-dojo-props="class:'alt-alt alt-success',    iconClass:'dijitIconKey'">OK</button>
+			<button data-dojo-type="dijit/form/Button" type="reset">Cancel</button>
+		</div>
+
+	</div>
+
+</body>
+</html>
+
